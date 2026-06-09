@@ -1,0 +1,64 @@
+# 强凸函数、条件数与线性收敛
+
+## 强凸函数定义
+
+$f$ 是 $\mu$-强凸的（$\mu>0$），若对所有 $x,y$：
+
+$$
+f(y)\ge f(x)+\nabla f(x)^T(y-x)+\frac{\mu}{2}|y-x|^2
+$$
+
+### 等价条件（二阶可微时）
+
+$$
+\nabla^2 f(x)\succeq \mu I \quad \text{即} \quad \lambda_{\min}(\nabla^2 f(x))\ge\mu
+$$
+
+## L-光滑 + $\mu$-强凸
+
+结合两个条件：
+
+- **二次上界**（L-光滑）：$f(y)\le f(x)+\nabla f(x)^T(y-x)+\frac{L}{2}|y-x|^2$
+- **二次下界**（$\mu$-强凸）：$f(y)\ge f(x)+\nabla f(x)^T(y-x)+\frac{\mu}{2}|y-x|^2$
+
+Hessian 条件：
+$$
+\mu I\preceq\nabla^2 f(x)\preceq LI
+$$
+
+## 条件数
+
+$$
+\kappa=\frac{L}{\mu}\ge 1
+$$
+
+条件数衡量函数的"病态程度"：$\kappa$ 越大，不同方向曲率差异越大，梯度下降越慢。
+
+## 线性收敛
+
+对于 $L$-光滑且 $\mu$-强凸的函数，取 $t=2/(L+\mu)$（或 $t=1/L$），有：
+
+$$
+f(x_k)-f^*\le\left(\frac{\kappa-1}{\kappa+1}\right)^{2k}\big(f(x_0)-f^*\big)
+$$
+
+或
+
+$$
+f(x_{k+1})-f^*\le\left(1-\frac{\mu}{L}\right)\big(f(x_k)-f^*\big)
+$$
+
+这就是**线性收敛**（$Q$-线性收敛），每步误差乘以一个小于1的常数。
+
+### 所需迭代次数
+
+达到精度 $\varepsilon$ 需要：
+$$
+K=O\left(\kappa\log\frac{1}{\varepsilon}\right)
+$$
+
+条件数 $\kappa=L/\mu$ 越大，收敛越慢。这与第7页的椭圆例子一致。
+
+<Callout type="info">
+**核心结论**：强凸保证了函数在最优解附近至少有二次增长，结合光滑性得到线性收敛。
+</Callout>

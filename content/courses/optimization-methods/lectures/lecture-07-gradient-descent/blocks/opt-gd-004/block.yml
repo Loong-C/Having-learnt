@@ -1,0 +1,14 @@
+id: opt-gd-004
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: 非凸情形收敛分析
+title_en: Convergence Analysis for Non-Convex Case
+pages: "13-15"
+topics:
+  - 充分下降引理
+  - 常数步长收敛性
+  - 精确线搜索收敛性
+  - 回溯线搜索收敛性
+  - 梯度趋于零的证明
+status: completed
+created: 2026-06-09

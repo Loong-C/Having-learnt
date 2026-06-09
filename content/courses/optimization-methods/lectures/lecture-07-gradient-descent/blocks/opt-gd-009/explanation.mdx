@@ -1,0 +1,54 @@
+# 实现复杂度与逻辑回归
+
+## Flop 计数
+
+- **梯度 $\nabla f(x_k)$**：函数值 + 梯度共 $O(n^2)$ flops（对一般函数）
+- **二次函数 $f(x)=\frac12x^TAx-b^Tx$**：
+
+梯度：$\nabla f(x_k)=Ax_k-b$，每步 $O(n^2)$
+
+精确线搜索步长：
+
+$$
+t_k=\frac{\nabla f(x_k)^T\nabla f(x_k)}{\nabla f(x_k)^TA\nabla f(x_k)}
+$$
+
+分母可复用 $A\nabla f(x_k)$ 的计算结果。
+
+## 逻辑回归
+
+### 问题设定
+
+给定数据 $\{(a_i,b_i)\}_{i=1}^m$，$a_i\in\mathbb{R}^n$，$b_i\in\{0,1\}$。
+
+目标函数（负对数似然）：
+
+$$
+f(x)=\sum_{i=1}^m\left[-b_i a_i^Tx+\log(1+e^{a_i^Tx})\right]
+$$
+
+### 概率向量
+
+令 $p_i=\sigma(a_i^Tx)=\frac{1}{1+e^{-a_i^Tx}}$（sigmoid 函数），则：
+
+$$
+f(x)=-\sum_{i=1}^m\left[b_i\log p_i+(1-b_i)\log(1-p_i)\right]
+$$
+
+### 梯度公式
+
+$$
+\nabla f(x)=\sum_{i=1}^m(p_i-b_i)a_i=A^T(p-b)
+$$
+
+其中 $A$ 是 $m\times n$ 数据矩阵，$p,b\in\mathbb{R}^m$。
+
+### 计算复杂度
+
+- 计算 $p$：$O(mn)$（矩阵-向量乘 + sigmoid）
+- 计算梯度 $\nabla f(x)$：$O(mn)$（$A^T(p-b)$）
+- 总每步：$O(mn)$
+
+<Callout type="check">
+**实际要点**：线搜索中可复用 $A\nabla f(x_k)$ 的计算，避免重复矩阵-向量乘法。
+</Callout>

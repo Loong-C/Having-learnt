@@ -83,7 +83,7 @@ Backend / Scripts:
 ## 5. 推荐仓库结构
 
 ```text
-ai-study-vault/
+having learnt/
   README.md
   AGENTS.md
   package.json

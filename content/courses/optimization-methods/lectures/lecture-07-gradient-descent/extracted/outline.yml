@@ -1,0 +1,41 @@
+lecture: lecture-07-gradient-descent
+pages: 
+  - range: "2-6"
+    topics:
+      - 无约束优化问题与迭代算法框架
+      - 下降方向与负梯度方向
+      - 最速下降方向的推导
+      - 停止准则
+      - 步长选择方法
+  - range: "7-9"
+    topics:
+      - 精确线搜索步长推导
+      - 之字形现象分析
+      - Armijo回溯线搜索
+  - range: "10-12"
+    topics:
+      - Lipschitz连续与L-光滑
+      - 二次上界推导
+      - Hessian条件
+  - range: "13-15"
+    topics:
+      - 充分下降引理
+      - 非凸情形收敛分析
+      - 梯度趋于零的证明
+  - range: "16"
+    topics:
+      - 凸函数O(1/k)收敛速度
+  - range: "17-20"
+    topics:
+      - 强凸函数与二次下界
+      - 条件数与线性收敛
+  - range: "21"
+    topics:
+      - 预条件梯度下降
+  - range: "22-26"
+    topics:
+      - 收敛率分类
+      - Q-次线性/线性/超线性/二次收敛
+  - range: "27-28"
+    topics:
+      - 实现复杂度与逻辑回归例子

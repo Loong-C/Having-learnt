@@ -1,0 +1,14 @@
+id: opt-gd-006
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: 强凸函数、条件数与线性收敛
+title_en: Strong Convexity, Condition Number and Linear Convergence
+pages: "17-20"
+topics:
+  - 强凸函数定义
+  - 二次下界
+  - Hessian条件
+  - 条件数 L/μ
+  - 线性收敛率
+status: completed
+created: 2026-06-09

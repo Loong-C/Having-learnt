@@ -1,0 +1,60 @@
+# Lipschitz 梯度与光滑函数
+
+## Lipschitz 连续
+
+函数 $h$ 是 Lipschitz 连续的，若存在 $L$ 使得对所有 $x,y$：
+
+$$
+|h(x)-h(y)|_2\le L|x-y|_2
+$$
+
+输入变化多少，输出变化不超过 $L$ 倍。
+
+## 梯度 Lipschitz（L-光滑）
+
+$$
+|\nabla f(x)-\nabla f(y)|_2\le L|x-y|_2
+$$
+
+记为 $f\in C^{1,1}_L(\mathbb{R}^n)$。梯度变化速度被 $L$ 控制。
+
+### 例子
+
+- **线性函数** $f(x)=a^Tx+b$：$\nabla f(x)=a$ 为常数，可取 $L=0$
+- **二次函数** $f(x)=x^TAx+2b^Tx+c$：可取 $L=2\|A\|$
+- **$f(x)=\sqrt{1+x^2}$**：$f''(x)=\frac{1}{(1+x^2)^{3/2}}\le 1$，取 $L=1$
+
+## 二次上界（核心工具）
+
+若 $\nabla f$ 为 $L$-Lipschitz，则：
+
+$$
+f(y)\le f(x)+\nabla f(x)^T(y-x)+\frac{L}{2}|y-x|^2
+$$
+
+### 推导
+
+令 $d=y-x$，$\phi(s)=f(x+sd)$：
+
+$$
+\begin{aligned}
+f(y)-f(x)&=\int_0^1\nabla f(x+sd)^T d\,ds\\
+&=\nabla f(x)^Td+\int_0^1(\nabla f(x+sd)-\nabla f(x))^Td\,ds\\
+&\le\nabla f(x)^Td+\int_0^1 Ls|d|^2\,ds\\
+&=\nabla f(x)^Td+\frac{L}{2}|d|^2
+\end{aligned}
+$$
+
+## Hessian 条件
+
+若 $f$ 二阶可微，梯度 Lipschitz 等价于：
+
+$$
+\nabla^2 f(x)\preceq LI \quad \text{即} \quad \|\nabla^2 f(x)\|\le L
+$$
+
+一维情况：$|f''(x)|\le L$——二阶导数有界。
+
+<Callout type="info">
+**主线**：Lipschitz 梯度 → 二次上界 → 将梯度下降一步代入 → 充分下降引理
+</Callout>

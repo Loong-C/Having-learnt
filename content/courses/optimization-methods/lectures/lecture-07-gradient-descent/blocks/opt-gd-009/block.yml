@@ -1,0 +1,13 @@
+id: opt-gd-009
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: 实现复杂度与逻辑回归
+title_en: Implementation Complexity and Logistic Regression
+pages: "27-28"
+topics:
+  - Flop计数
+  - 线搜索计算复用
+  - 逻辑回归目标函数
+  - 概率向量与梯度公式推导
+status: completed
+created: 2026-06-09

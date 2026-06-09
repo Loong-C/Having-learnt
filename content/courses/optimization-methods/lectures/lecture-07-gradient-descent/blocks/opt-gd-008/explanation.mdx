@@ -1,0 +1,52 @@
+# 收敛率分类
+
+## 迭代复杂度
+
+达到 $\varepsilon$-精度所需迭代次数 $K(\varepsilon)$。
+
+## Q-收敛率分类
+
+设序列 $x_k\to x^*$（或 $f(x_k)\to f^*$），定义误差 $e_k=\|x_k-x^*\|$。
+
+### 次线性收敛（Sublinear）
+
+$$e_k=O(1/k^p),\quad p>0$$
+
+- 例：$e_k=1/k$，$1/k^2$
+- 梯度下降在凸情形：$f(x_k)-f^*=O(1/k)$
+
+### Q-线性收敛（Q-Linear）
+
+$$\lim_{k\to\infty}\frac{e_{k+1}}{e_k}=r,\quad 0<r<1$$
+
+- $e_{k+1}\approx r\cdot e_k$
+- 例：$e_k=0.5^k$
+- 强凸梯度下降：$r=1-\mu/L$
+
+### Q-超线性收敛（Q-Superlinear）
+
+$$\lim_{k\to\infty}\frac{e_{k+1}}{e_k}=0$$
+
+- 比值趋于零，比线性更快
+- 例：$e_k=1/k!$，$e_k=k^{-k}$
+
+### Q-二次收敛（Q-Quadratic）
+
+$$\lim_{k\to\infty}\frac{e_{k+1}}{e_k^2}=C<\infty$$
+
+- $e_{k+1}\approx C\cdot e_k^2$
+- 例：$e_k=2^{-2^k}$
+- 牛顿法在合适条件下具有二次收敛
+
+## 序列例子对比
+
+| 序列 | $e_k$ | 收敛类型 |
+|------|-------|----------|
+| $1/k$ | $O(1/k)$ | 次线性 |
+| $0.5^k$ | $O(0.5^k)$ | Q-线性 |
+| $1/k!$ | — | Q-超线性 |
+| $2^{-2^k}$ | — | Q-二次 |
+
+<Callout type="info">
+**口诀**：次线性 $\sim$ 多项式慢，线性 $\sim$ 等比快，超线性 $\sim$ 比等比更快，二次 $\sim$ 平方级加速。
+</Callout>

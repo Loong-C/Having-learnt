@@ -1,0 +1,81 @@
+# 精确线搜索与之字形现象
+
+## 二次函数的精确线搜索步长
+
+对于 $f(x)=x^TAx+2b^Tx+c$（$A\succ 0$），沿 $p_k$ 的精确步长：
+
+令 $\phi(t)=f(x_k+tp_k)$，展开得：
+
+$$
+\phi(t)=f(x_k)+t p_k^T\nabla f(x_k)+t^2p_k^TAp_k
+$$
+
+求导令零：
+
+$$
+t_k=-\frac{p_k^T\nabla f(x_k)}{2p_k^TAp_k}
+$$
+
+对梯度下降方向 $p_k=-\nabla f(x_k)$：
+
+$$
+t_k=\frac{\nabla f(x_k)^T\nabla f(x_k)}{2\nabla f(x_k)^TA\nabla f(x_k)}
+$$
+
+## 之字形运动分析
+
+对于 $f(x)=\frac12\big((x^{(1)})^2+\gamma(x^{(2)})^2\big)$，$\gamma\ge 1$：
+
+- $\gamma=1$：等高线是圆，收敛很快
+- $\gamma$ 大：等高线是狭长椭圆，**误差收缩**：
+
+$$
+\frac{|x_k-x^*|}{|x_0-x^*|}=\left(\frac{\gamma-1}{\gamma+1}\right)^k
+$$
+
+$\gamma=10000$ 时，每步误差约乘 $0.9998$，极慢！
+
+## 相邻步正交性
+
+精确线搜索梯度下降满足：
+
+$$
+(x_{k+2}-x_{k+1})^T(x_{k+1}-x_k)=0
+$$
+
+**推导**：精确线搜索满足 $\phi'(t_k)=0$：
+
+$$
+0=\nabla f(x_{k+1})^Tp_k = -\nabla f(x_{k+1})^T\nabla f(x_k)
+$$
+
+因此 $\nabla f(x_{k+1})^T\nabla f(x_k)=0$，连续两步位移正交。
+
+## Armijo 回溯线搜索
+
+**核心公式**：
+
+$$
+f(x_k+t_kp_k)\le f(x_k)+\alpha t_k p_k^T\nabla f(x_k)
+$$
+
+改写为：
+
+$$
+\text{真实下降量} \ge \alpha \times \text{一阶预测下降量}
+$$
+
+### 算法流程
+
+1. 设初始步长 $\hat t=1$，$\beta=\frac12$，$\alpha=10^{-4}$
+2. 若满足 Armijo 条件则接受，否则 $t\leftarrow\beta t$ 重试
+3. 重复直至条件满足
+
+### 参数含义
+
+- $\alpha$：下降要求严格程度（通常很小，如 $10^{-4}$）
+- $\beta$：步长缩小速度（通常 $\frac12$）
+
+<Callout type="check">
+**掌握要点**：精确线搜索每一步在线上最优，但因正交性导致之字形震荡；Armijo 不追求最优，只要求"合格"。
+</Callout>

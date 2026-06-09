@@ -1,0 +1,13 @@
+id: opt-gd-003
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: Lipschitz梯度与光滑函数
+title_en: Lipschitz Gradient and Smooth Functions
+pages: "10-12"
+topics:
+  - Lipschitz连续定义
+  - L-光滑性质
+  - 二次上界推导
+  - Hessian条件等价性
+status: completed
+created: 2026-06-09

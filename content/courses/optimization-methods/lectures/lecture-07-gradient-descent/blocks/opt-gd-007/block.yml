@@ -1,0 +1,13 @@
+id: opt-gd-007
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: 预条件梯度下降
+title_en: Preconditioned Gradient Descent
+pages: "21"
+topics:
+  - 预条件矩阵P
+  - Jacobi预条件
+  - 牛顿法联系
+  - 变量变换与地形重塑
+status: completed
+created: 2026-06-09

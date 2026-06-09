@@ -1,0 +1,12 @@
+id: opt-gd-005
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: 凸函数O(1/k)收敛速度
+title_en: Convex Function O(1/k) Convergence Rate
+pages: "16"
+topics:
+  - 凸函数定义
+  - 函数值误差界
+  - O(1/k)收敛速率推导
+status: completed
+created: 2026-06-09

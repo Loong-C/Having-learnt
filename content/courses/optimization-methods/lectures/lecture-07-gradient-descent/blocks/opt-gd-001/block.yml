@@ -1,0 +1,15 @@
+id: opt-gd-001
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: 梯度下降基本框架
+title_en: Gradient Descent Basic Framework
+pages: "2-6"
+topics:
+  - 无约束优化问题
+  - 迭代算法格式
+  - 下降方向定义
+  - 负梯度与最速下降
+  - 停止准则
+  - 步长选择方法
+status: completed
+created: 2026-06-09

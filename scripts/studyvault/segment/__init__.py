@@ -1,0 +1,1 @@
+"""StudyVault segment module."""

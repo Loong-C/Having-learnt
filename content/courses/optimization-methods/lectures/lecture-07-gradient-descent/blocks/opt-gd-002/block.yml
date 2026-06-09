@@ -1,0 +1,14 @@
+id: opt-gd-002
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: 精确线搜索与之字形现象
+title_en: Exact Line Search and Zig-Zag Phenomenon
+pages: "7-9"
+topics:
+  - 二次函数精确线搜索步长
+  - 椭圆等高线与之字形运动
+  - 相邻步正交性证明
+  - Armijo回溯线搜索
+  - 充分下降条件
+status: completed
+created: 2026-06-09

@@ -1,0 +1,14 @@
+id: opt-gd-008
+course: optimization-methods
+lecture: lecture-07-gradient-descent
+title: 收敛率分类
+title_en: Classification of Convergence Rates
+pages: "22-26"
+topics:
+  - 迭代复杂度
+  - Q-次线性收敛
+  - Q-线性收敛
+  - 超线性收敛
+  - 二次收敛
+status: completed
+created: 2026-06-09

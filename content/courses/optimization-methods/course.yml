@@ -1,0 +1,13 @@
+id: optimization-methods
+title: 最优化方法
+title_en: Optimization Methods
+description: 系统学习最优化理论与方法，从迭代算法框架到梯度下降法的收敛分析
+instructor: AI Study Vault
+semester: 2026 Spring
+language: zh
+lectures:
+  - id: lecture-07-gradient-descent
+    title: 第7讲 梯度下降法
+    title_en: Lecture 7: Gradient Descent Methods
+    pages: 28
+    date: 2026-06-09

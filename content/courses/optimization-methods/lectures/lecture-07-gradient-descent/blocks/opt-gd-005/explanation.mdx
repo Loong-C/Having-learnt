@@ -1,0 +1,38 @@
+# 凸函数 $O(1/k)$ 收敛速度
+
+## 凸函数定义
+
+$f$ 是凸函数，若对所有 $x,y$ 和 $\lambda\in[0,1]$：
+
+$$
+f(\lambda x+(1-\lambda)y)\le\lambda f(x)+(1-\lambda)f(y)
+$$
+
+等价的一阶条件：
+
+$$
+f(y)\ge f(x)+\nabla f(x)^T(y-x)
+$$
+
+## 凸函数下的收敛分析
+
+对凸函数，还需假设最优解集非空且有界：$\|x_0-x^*\|\le R$。
+
+取步长 $t_k=\frac{1}{L}$，梯度下降满足：
+
+$$
+f(x_k)-f^*\le\frac{2LR^2}{k}
+$$
+
+即函数值误差以 $O(1/k)$ 速度收敛。
+
+## 达到精度 $\varepsilon$ 所需的迭代次数
+
+- 非凸情形：$K=O(1/\varepsilon^2)$ 次迭代使梯度范数 $\le\varepsilon$
+- 凸情形：$K=O(1/\varepsilon)$ 次迭代使函数值误差 $\le\varepsilon$
+
+凸性带来了从 $O(1/\varepsilon^2)$ 到 $O(1/\varepsilon)$ 的加速。
+
+<Callout type="check">
+**关键区别**：凸函数保证了 $O(1/k)$ 的函数值收敛，而非凸只能保证梯度范数趋于零。
+</Callout>
