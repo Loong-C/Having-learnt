@@ -1,11 +1,11 @@
 id: lecture-07-gradient-descent
 course: optimization-methods
 title: 第7讲 梯度下降法
-title_en: Lecture 7: Gradient Descent Methods
+title_en: "Lecture 7: Gradient Descent Methods"
 pages: 28
 source_file: Optimization_lecture_7_2026_Gradient descent methods.pdf
 source_type: pdf
-date: 2026-06-09
+date: "2026-06-09"
 language: zh
 blocks:
   - opt-gd-001

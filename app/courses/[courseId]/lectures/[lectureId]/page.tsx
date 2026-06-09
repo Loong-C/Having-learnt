@@ -5,6 +5,8 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { Callout } from '@/components/Callout';
 import { Theorem, Proof } from '@/components/Theorem';
 import Link from 'next/link';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 interface Props {
   params: { courseId: string; lectureId: string };
@@ -16,6 +18,18 @@ const components = {
   Theorem,
   Proof,
 };
+
+/** Parse "2-6" or "7" into an array of page numbers */
+function parsePagesRange(pages: string): number[] {
+  if (!pages) return [];
+  const trimmed = pages.trim();
+  if (trimmed.includes('-')) {
+    const [start, end] = trimmed.split('-').map(Number);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+  const num = Number(trimmed);
+  return isNaN(num) ? [] : [num];
+}
 
 export default function LecturePage({ params, searchParams }: Props) {
   const course = getCourse(params.courseId);
@@ -55,9 +69,18 @@ export default function LecturePage({ params, searchParams }: Props) {
       />
 
       {/* Main Content - Block Reader */}
-      <div className="flex-1 min-w-0">
+      <div
+        className="flex-1 min-w-0"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: 'calc(100vh - 4rem)',
+          overflow: 'hidden',
+          alignSelf: 'flex-start',
+        }}
+      >
         {/* Lecture Header */}
-        <div className="mb-6">
+        <div className="mb-6" style={{ flexShrink: 0 }}>
           <Link href={`/courses/${params.courseId}`} className="text-sm text-blue-600 hover:text-blue-800">
             ← {course.title}
           </Link>
@@ -71,25 +94,54 @@ export default function LecturePage({ params, searchParams }: Props) {
         </div>
 
         {activeBlock ? (
-          <div className="block-reader">
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '2rem',
+            }}
+          >
             {/* Left: Source / Original */}
-            <div className="block-reader-left">
-              <div className="sticky top-20">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs font-medium bg-gray-100 text-gray-500 px-2 py-1 rounded">
-                    讲义原文
-                  </span>
-                  <span className="text-xs text-gray-400">第 {activeBlock.pages} 页</span>
-                </div>
+            <div
+              style={{
+                minHeight: 0,
+                overflowY: 'auto',
+                paddingRight: '1rem',
+                borderRight: '1px solid #e2e4e9',
+              }}
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xs font-medium bg-gray-100 text-gray-500 px-2 py-1 rounded">
+                  讲义原文
+                </span>
+                <span className="text-xs text-gray-400">第 {activeBlock.pages} 页</span>
+              </div>
                 
-                {/* Source placeholder - in real version, this would show the PDF page image */}
-                <div className="rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 p-8 text-center">
-                  <div className="text-4xl mb-3">📄</div>
-                  <p className="text-sm text-gray-500 font-medium">{activeBlock.title}</p>
-                  <p className="text-xs text-gray-400 mt-1">{activeBlock.title_en}</p>
-                  <p className="text-xs text-gray-400 mt-2">
-                    讲义原始页面将在此显示（需运行 PDF 渲染脚本）
-                  </p>
+                {/* PDF Page Images */}
+                <div className="space-y-4">
+                  {(() => {
+                    const pageNums = parsePagesRange(activeBlock.pages);
+                    return pageNums.map((pageNum) => {
+                      const pageStr = String(pageNum).padStart(2, '0');
+                      const imgSrc = `/pages/${params.lectureId}/page-${pageStr}.png`;
+                      return (
+                        <div key={pageNum} className="rounded-lg border border-gray-200 overflow-hidden bg-white shadow-sm">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={imgSrc}
+                            alt={`讲义第 ${pageNum} 页`}
+                            className="w-full h-auto"
+                            loading="lazy"
+                          />
+                          <div className="px-3 py-1.5 bg-gray-50 border-t border-gray-100 text-xs text-gray-400">
+                            第 {pageNum} 页
+                          </div>
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
 
                 {/* Topics */}
@@ -105,11 +157,10 @@ export default function LecturePage({ params, searchParams }: Props) {
                     </div>
                   </div>
                 )}
-              </div>
             </div>
 
             {/* Right: AI Explanation */}
-            <div className="block-reader-right">
+            <div style={{ minHeight: 0, overflowY: 'auto' }}>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs font-medium bg-green-100 text-green-700 px-2 py-1 rounded">
                   AI 讲解
@@ -118,7 +169,16 @@ export default function LecturePage({ params, searchParams }: Props) {
               
               <div className="prose prose-gray max-w-none">
                 {mdxSource ? (
-                  <MDXRemote source={mdxSource} components={components} />
+                  <MDXRemote
+                    source={mdxSource}
+                    components={components}
+                    options={{
+                      mdxOptions: {
+                        remarkPlugins: [remarkMath],
+                        rehypePlugins: [rehypeKatex],
+                      },
+                    }}
+                  />
                 ) : (
                   <div className="text-center py-16 text-gray-400">
                     <p>该知识块暂无 AI 讲解内容</p>

@@ -53,31 +53,27 @@ body {
   margin-top: 1.5rem;
 }
 
-/* Block reader layout */
-.block-reader {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  min-height: calc(100vh - 4rem);
-}
-
-.block-reader-left {
-  border-right: 1px solid var(--color-border);
-  padding-right: 2rem;
-}
-
-.block-reader-right {
-  padding-left: 0;
-}
-
+/* Block reader layout - responsive override for mobile */
 @media (max-width: 1024px) {
-  .block-reader {
-    grid-template-columns: 1fr;
+  /* Inline styles on wrapper/grid/columns override desktop fixed-height layout.
+     On mobile these elements need overflow:visible and auto height. */
+  [style*="overflow: hidden"] {
+    height: auto !important;
+    overflow: visible !important;
+    align-self: auto !important;
   }
-  .block-reader-left {
-    border-right: none;
-    padding-right: 0;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 2rem;
+  [style*="overflow-y: auto"] {
+    overflow-y: visible !important;
+    min-height: auto !important;
+  }
+  [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    min-height: auto !important;
+  }
+  [style*="border-right"] {
+    border-right: none !important;
+    padding-right: 0 !important;
+    border-bottom: 1px solid var(--color-border) !important;
+    padding-bottom: 2rem !important;
   }
 }

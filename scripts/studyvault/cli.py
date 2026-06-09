@@ -9,9 +9,23 @@ console = Console()
 
 @app.command()
 def ingest_pdf(pdf_path: str, output_dir: str = "content"):
-    """Ingest a PDF: extract pages as images and text."""
-    console.print(f"[bold green]Ingesting PDF:[/] {pdf_path}")
-    console.print("[yellow]This command requires PyMuPDF. Install with: pip install PyMuPDF[/]")
+    """Ingest a PDF: extract pages as images."""
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    project_root = Path(__file__).resolve().parent.parent.parent
+    render_script = project_root / "scripts" / "render_pdf.py"
+
+    console.print(f"[bold green]Rendering PDF pages:[/] {pdf_path}")
+    result = subprocess.run(
+        [sys.executable, str(render_script), "--pdf", pdf_path],
+        cwd=str(project_root),
+    )
+    if result.returncode == 0:
+        console.print("[bold green]✅ PDF pages rendered successfully[/]")
+    else:
+        console.print("[bold red]❌ PDF rendering failed[/]")
 
 
 @app.command()

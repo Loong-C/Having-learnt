@@ -1,38 +1,285 @@
-# 凸函数 $O(1/k)$ 收敛速度
+好，我们继续第 16 页。前面第 13 到第 15 页分析的是“一般光滑函数”，也就是说不要求凸。在那种情况下，我们只能证明梯度范数趋于零，也就是逐渐接近驻点。现在第 16 页开始加入更强的结构：假设 $f$ 是凸函数。只要有凸性，我们就可以证明函数值真的趋近全局最优值，而且能得到更明确的函数值误差收敛速度。
 
-## 凸函数定义
-
-$f$ 是凸函数，若对所有 $x,y$ 和 $\lambda\in[0,1]$：
-
+这一页考虑的是常数步长梯度下降：
 $$
-f(\lambda x+(1-\lambda)y)\le\lambda f(x)+(1-\lambda)f(y)
+x_{k+1}=x_k-t\nabla f(x_k).
 $$
-
-等价的一阶条件：
-
+这里 $t$ 是固定步长。为了得到讲义中的结论，通常还隐含要求 $f$ 是凸函数、$\nabla f$ 是 $L$-Lipschitz 连续，并且步长选得合适，例如 $0<t\le 1/L$。讲义给出的核心结论是
 $$
-f(y)\ge f(x)+\nabla f(x)^T(y-x)
+f(x_k)-f(x^\ast)\le \frac{1}{2kt}|x_0-x^\ast|_2^2.
 $$
-
-## 凸函数下的收敛分析
-
-对凸函数，还需假设最优解集非空且有界：$\|x_0-x^*\|\le R$。
-
-取步长 $t_k=\frac{1}{L}$，梯度下降满足：
-
+这个式子非常重要。它说明凸函数情形下，梯度下降的函数值误差按照
 $$
-f(x_k)-f^*\le\frac{2LR^2}{k}
+O\left(\frac1k\right)
 $$
+的速度下降。这里 $x^\ast$ 是全局最优点，$f(x^\ast)$ 是全局最优值。
 
-即函数值误差以 $O(1/k)$ 速度收敛。
+我们现在来推导这个结论。推导的核心思想是：看每一步之后当前点到最优点的距离平方如何变化。因为
+$$
+x_{k+1}=x_k-t\nabla f(x_k),
+$$
+所以
+$$
+x_{k+1}-x^\ast=x_k-x^\ast-t\nabla f(x_k).
+$$
+两边取范数平方：
+$$
+|x_{k+1}-x^\ast|^2
 
-## 达到精度 $\varepsilon$ 所需的迭代次数
+|x_k-x^\ast-t\nabla f(x_k)|^2.
+$$
+展开平方：
+$$
+|x_{k+1}-x^\ast|^2
 
-- 非凸情形：$K=O(1/\varepsilon^2)$ 次迭代使梯度范数 $\le\varepsilon$
-- 凸情形：$K=O(1/\varepsilon)$ 次迭代使函数值误差 $\le\varepsilon$
+|x_k-x^\ast|^2
+-2t\nabla f(x_k)^T(x_k-x^\ast)
++t^2|\nabla f(x_k)|^2.
+$$
+现在我们需要把右边和函数值误差 $f(x_k)-f(x^\ast)$ 联系起来。首先，由凸函数的一阶性质，对任意 $x,y$，有
+$$
+f(y)\ge f(x)+\nabla f(x)^T(y-x).
+$$
+取
+$$
+x=x_k,\qquad y=x^\ast,
+$$
+得到
+$$
+f(x^\ast)\ge f(x_k)+\nabla f(x_k)^T(x^\ast-x_k).
+$$
+移项：
+$$
+\nabla f(x_k)^T(x_k-x^\ast)\ge f(x_k)-f(x^\ast).
+$$
+这一步非常关键。它说明当前梯度和“从最优点指向当前点的方向”的内积，至少等于当前函数值误差。
 
-凸性带来了从 $O(1/\varepsilon^2)$ 到 $O(1/\varepsilon)$ 的加速。
+接下来我们还要处理最后一项
+$$
+t^2|\nabla f(x_k)|^2.
+$$
+由于 $f$ 是 $L$-smooth，并且步长 $t\le 1/L$，可以利用一个常见结论：
+$$
+\frac{t}{2}|\nabla f(x_k)|^2\le f(x_k)-f(x_{k+1}).
+$$
+这个结论其实来自我们前面讲过的充分下降引理。当 $0<t\le 1/L$ 时，
+$$
+f(x_k)-f(x_{k+1})
+\ge
+t\left(1-\frac{Lt}{2}\right)|\nabla f(x_k)|^2.
+$$
+因为 $t\le 1/L$，所以
+$$
+1-\frac{Lt}{2}\ge \frac12.
+$$
+于是
+$$
+f(x_k)-f(x_{k+1})
+\ge
+\frac{t}{2}|\nabla f(x_k)|^2.
+$$
+等价地，
+$$
+t^2|\nabla f(x_k)|^2
+\le
+2t\bigl(f(x_k)-f(x_{k+1})\bigr).
+$$
+把这些代入距离平方展开式：
+$$
+|x_{k+1}-x^\ast|^2
 
-<Callout type="check">
-**关键区别**：凸函数保证了 $O(1/k)$ 的函数值收敛，而非凸只能保证梯度范数趋于零。
-</Callout>
+|x_k-x^\ast|^2
+-2t\nabla f(x_k)^T(x_k-x^\ast)
++t^2|\nabla f(x_k)|^2.
+$$
+由凸性，
+$$
+\nabla f(x_k)^T(x_k-x^\ast)\ge f(x_k)-f(x^\ast),
+$$
+所以
+$$
+-2t\nabla f(x_k)^T(x_k-x^\ast)
+\le
+-2t(f(x_k)-f(x^\ast)).
+$$
+再由充分下降，
+$$
+t^2|\nabla f(x_k)|^2
+\le
+2t(f(x_k)-f(x_{k+1})).
+$$
+因此
+$$
+|x_{k+1}-x^\ast|^2
+\le
+|x_k-x^\ast|^2
+-2t(f(x_k)-f(x^\ast))
++2t(f(x_k)-f(x_{k+1})).
+$$
+中间两项合并：
+$$
+-2t(f(x_k)-f(x^\ast))
++2t(f(x_k)-f(x_{k+1}))
+
+2t(f(x^\ast)-f(x_{k+1})).
+$$
+所以
+$$
+|x_{k+1}-x^\ast|^2
+\le
+|x_k-x^\ast|^2
+-2t(f(x_{k+1})-f(x^\ast)).
+$$
+移项得到
+$$
+2t(f(x_{k+1})-f(x^\ast))
+\le
+|x_k-x^\ast|^2-|x_{k+1}-x^\ast|^2.
+$$
+这就是推导的核心不等式。它的含义是：第 $k+1$ 步的函数值误差，可以被“距离最优点的平方减少量”控制。
+
+现在对 $k=0,1,\ldots,N-1$ 求和：
+$$
+2t\sum_{k=0}^{N-1}(f(x_{k+1})-f(x^\ast))
+\le
+\sum_{k=0}^{N-1}
+\left(
+|x_k-x^\ast|^2-|x_{k+1}-x^\ast|^2
+\right).
+$$
+右边又是望远镜求和：
+$$
+\sum_{k=0}^{N-1}
+\left(
+|x_k-x^\ast|^2-|x_{k+1}-x^\ast|^2
+\right)
+
+|x_0-x^\ast|^2-|x_N-x^\ast|^2.
+$$
+因为范数平方非负，所以
+$$
+|x_0-x^\ast|^2-|x_N-x^\ast|^2
+\le
+|x_0-x^\ast|^2.
+$$
+于是
+$$
+2t\sum_{k=0}^{N-1}(f(x_{k+1})-f(x^\ast))
+\le
+|x_0-x^\ast|^2.
+$$
+也就是
+$$
+\sum_{k=1}^{N}(f(x_k)-f(x^\ast))
+\le
+\frac{1}{2t}|x_0-x^\ast|^2.
+$$
+因为梯度下降在合适步长下函数值非增，所以
+$$
+f(x_N)\le f(x_k)
+$$
+对 $k=1,\ldots,N$ 成立，因此
+$$
+f(x_N)-f(x^\ast)
+\le
+\frac1N\sum_{k=1}^{N}(f(x_k)-f(x^\ast)).
+$$
+把上面的和式估计代入，就得到
+$$
+f(x_N)-f(x^\ast)
+\le
+\frac{1}{2Nt}|x_0-x^\ast|^2.
+$$
+把 $N$ 改写成 $k$，就是讲义中的结论：
+$$
+f(x_k)-f(x^\ast)\le \frac{1}{2kt}|x_0-x^\ast|^2.
+$$
+这个结论的意义是：如果我们想要
+$$
+f(x_k)-f(x^\ast)\le \epsilon,
+$$
+只需要让
+$$
+\frac{1}{2kt}|x_0-x^\ast|^2\le \epsilon.
+$$
+解出 $k$：
+$$
+k\ge \frac{|x_0-x^\ast|^2}{2t\epsilon}.
+$$
+所以迭代次数随 $1/\epsilon$ 增长，记作
+$$
+O\left(\frac1\epsilon\right).
+$$
+这就是第 16 页中 “iterate number for $f(x_k)-f(x^\ast)\le \epsilon$ is $O(1/\epsilon)$” 的意思。注意这里说的是为了达到函数值误差 $\epsilon$，需要大约 $1/\epsilon$ 量级的迭代次数。
+
+第 16 页还给出一个梯度范数的估计：
+$$
+|\nabla f(x_k)|^2
+\le
+2L(f(x_k)-f^\ast)
+\le
+\frac{L}{kt}|x_0-x^\ast|_2^2.
+$$
+这里的第一个不等式也值得解释。对于凸且 $L$-smooth 的函数，有一个常用关系：
+$$
+|\nabla f(x)|^2\le 2L(f(x)-f^\ast).
+$$
+它可以这样理解。由充分下降引理，取步长 $1/L$，有
+$$
+f(x)-f\left(x-\frac1L\nabla f(x)\right)
+\ge
+\frac{1}{2L}|\nabla f(x)|^2.
+$$
+因为 $f^\ast$ 是全局最小值，所以
+$$
+f\left(x-\frac1L\nabla f(x)\right)\ge f^\ast.
+$$
+于是
+$$
+f(x)-f^\ast
+\ge
+f(x)-f\left(x-\frac1L\nabla f(x)\right)
+\ge
+\frac{1}{2L}|\nabla f(x)|^2.
+$$
+移项得到
+$$
+|\nabla f(x)|^2\le 2L(f(x)-f^\ast).
+$$
+再把刚才的函数值误差界代入：
+$$
+f(x_k)-f^\ast
+\le
+\frac{1}{2kt}|x_0-x^\ast|^2,
+$$
+于是
+$$
+|\nabla f(x_k)|^2
+\le
+2L\cdot \frac{1}{2kt}|x_0-x^\ast|^2
+
+\frac{L}{kt}|x_0-x^\ast|^2.
+$$
+这就得到讲义中的第二个结论。
+
+这一页最后提到 Nesterov 的快速梯度方法，它可以把凸光滑优化中的函数值收敛速度从普通梯度下降的
+$$
+O\left(\frac1k\right)
+$$
+提升到
+$$
+O\left(\frac1{k^2}\right).
+$$
+这里我们暂时不展开，因为这份讲义的主体还是经典梯度下降。你现在只需要知道：普通梯度下降在一般凸光滑情形下是 $O(1/k)$，而 Nesterov 加速方法可以达到 $O(1/k^2)$，这是凸优化中非常重要的加速结果。
+
+我们把第 16 页总结一下。一般非凸情形下，梯度下降只能保证梯度趋于零；一旦加入凸性，就可以保证函数值趋于全局最优值。对于常数步长梯度下降，在合适步长下，有
+$$
+f(x_k)-f(x^\ast)\le \frac{1}{2kt}|x_0-x^\ast|^2.
+$$
+这说明函数值误差是 $O(1/k)$，达到误差 $\epsilon$ 需要 $O(1/\epsilon)$ 次迭代。
+
+这一页最重要的证明逻辑是：利用凸性把
+$$
+\nabla f(x_k)^T(x_k-x^\ast)
+$$
+和函数值误差联系起来，再利用充分下降控制梯度范数项，最后通过距离平方的望远镜求和得到 $O(1/k)$ 速度。

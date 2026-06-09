@@ -39,7 +39,8 @@ function readYaml(filePath: string): any {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
     return yaml.load(content);
-  } catch {
+  } catch (e) {
+    console.error(`[readYaml] Failed to parse ${filePath}:`, e);
     return null;
   }
 }
@@ -94,7 +95,9 @@ export function getCourse(courseId: string): Course | null {
           title: lecData.title,
           title_en: lecData.title_en,
           pages: lecData.pages,
-          date: lecData.date,
+          date: lecData.date instanceof Date
+            ? lecData.date.toISOString().slice(0, 10)
+            : String(lecData.date ?? ''),
         });
       }
     }
