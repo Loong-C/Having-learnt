@@ -1,0 +1,17 @@
+id: qt-rhq-002
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: 量化基础概念
+title_en: Quantization Fundamentals
+pages: "1-3"
+topics:
+  - 标量量化
+  - 向量量化与桶
+  - 比特数与量化等级
+  - 均方误差 4^{-b} 下降
+  - 随机旋转与能量打散
+  - Hadamard 变换
+  - dithering 随机平移
+  - 无偏性定义
+status: completed
+created: 2026-06-10

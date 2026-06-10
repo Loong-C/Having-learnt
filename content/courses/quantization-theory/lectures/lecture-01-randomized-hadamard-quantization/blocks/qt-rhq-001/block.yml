@@ -1,0 +1,17 @@
+id: qt-rhq-001
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: 论文总览与提纲
+title_en: Paper Overview and Outline
+pages: "1-2"
+topics:
+  - 论文核心问题
+  - 向量量化定义
+  - 随机旋转的代价
+  - Hadamard 变换加速
+  - dithering 补足理论保证
+  - Theorem 1.1 主结果预览
+  - Algorithm 1 与 Algorithm 5
+  - 讲解路线图
+status: completed
+created: 2026-06-10

@@ -1,0 +1,16 @@
+id: qt-rhq-003
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: Algorithm 1 流程与设计
+title_en: Algorithm 1 Flow and Design
+pages: "4-5"
+topics:
+  - Algorithm 1 完整流程
+  - 随机符号翻转
+  - Hadamard 变换编码
+  - 标量量化器
+  - 解码重建
+  - 比特表示
+  - 坐标缩放与反缩放
+status: completed
+created: 2026-06-10

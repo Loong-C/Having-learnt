@@ -1,0 +1,17 @@
+id: qt-rhq-007
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: Lemma 3.1 中心-尾部证明
+title_en: Lemma 3.1 Central-Tail Decomposition Proof
+pages: "6-7"
+topics:
+  - Lemma 3.1 标量误差上界
+  - 中心区域 |z| ≤ M
+  - 一阶 Taylor 展开近似
+  - dithering 均匀化误差
+  - 尾部区域 |z| > M
+  - subgaussian 尾界
+  - 常数 π√3/2 的来源
+  - F'(t) 与高斯密度
+status: completed
+created: 2026-06-10

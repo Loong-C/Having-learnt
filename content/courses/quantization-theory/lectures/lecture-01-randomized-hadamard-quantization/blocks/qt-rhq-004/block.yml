@@ -1,0 +1,16 @@
+id: qt-rhq-004
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: Gaussian 标量量化器与 F 函数
+title_en: Gaussian Scalar Quantizer and F Function
+pages: "4-5"
+topics:
+  - 标准高斯密度 φ(t)
+  - F(t) 的定义与构造
+  - 桶在分位数空间均匀切分
+  - F^{-1} 映射回实数轴
+  - 桶中点重构
+  - dithering 随机偏移 U
+  - 桶编号编码
+status: completed
+created: 2026-06-10

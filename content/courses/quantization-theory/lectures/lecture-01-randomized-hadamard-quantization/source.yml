@@ -1,0 +1,19 @@
+id: lecture-01-randomized-hadamard-quantization
+course: quantization-theory
+title: 可证明量化与随机Hadamard变换
+title_en: "Provable Quantization with Randomized Hadamard"
+pages: 25
+source_file: 26.6 Provable Quantization with Randomized Hadamard.pdf
+source_type: pdf
+date: "2026-06-10"
+language: zh
+blocks:
+  - qt-rhq-001
+  - qt-rhq-002
+  - qt-rhq-003
+  - qt-rhq-004
+  - qt-rhq-005
+  - qt-rhq-006
+  - qt-rhq-007
+  - qt-rhq-008
+  - qt-rhq-009

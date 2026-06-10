@@ -1,0 +1,873 @@
+如果这三步顺了，下一节我们就可以正式讲 Lemma 3.1：为什么这个标量量化误差可以做到
+
+$$
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+这也是论文里真正开始出现 $F$、dithering、中心区域和尾部区域分解的地方。
+
+我能理解了，请你尝试证明。
+
+
+我们要证明的目标是：
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|_2^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{B^2},
+$$
+
+其中
+
+$$
+B=2^b.
+$$
+
+因为
+
+$$
+B^{-2}=4^{-b},
+$$
+
+所以这也就是论文写的
+
+$$
+\frac{\pi\sqrt3/2+o(1)}{4^b}.
+$$
+
+这里 $x\in S^{d-1}$，也就是
+
+$$
+|x|_2=1.
+$$
+
+证明的第一层：把向量误差变成标量误差
+
+Algorithm 1 先计算
+
+$$
+y=HDx.
+$$
+
+然后对每个坐标定义
+
+$$
+z_i=\sqrt d,y_i.
+$$
+
+标量量化器把 $z_i$ 变成
+
+$$
+\operatorname{quant}(z_i).
+$$
+
+解码时，Hadamard 域中的恢复坐标是
+
+$$
+\widetilde{y}_i=\frac{1}{\sqrt d}\operatorname{quant}(z_i).
+$$
+
+最后算法输出
+
+$$
+\widetilde{x}=DH^\top \widetilde{y}.
+$$
+
+现在我们比较 $x$ 和 $\widetilde{x}$。因为 $H$ 是正交矩阵，$D$ 只是随机正负号对角矩阵，也正交，所以 $HD$ 不改变距离。因此
+
+$$
+|x-\widetilde{x}|_2^2
+
+|HDx-HD\widetilde{x}|_2^2.
+$$
+
+又因为
+
+$$
+HDx=y,
+$$
+
+而
+
+$$
+HD\widetilde{x}
+
+HD(DH^\top\widetilde{y}).
+$$
+
+注意
+
+$$
+D^2=I,\qquad HH^\top=I.
+$$
+
+所以
+
+$$
+HD(DH^\top\widetilde{y})
+
+# HH^\top\widetilde{y}
+
+\widetilde{y}.
+$$
+
+因此
+
+$$
+|x-\widetilde{x}|_2^2
+
+|y-\widetilde{y}|_2^2.
+$$
+
+这一步非常重要：我们把原空间中的误差，转移到了 Hadamard 域中。
+
+接下来展开坐标：
+
+$$
+|y-\widetilde{y}|_2^2
+
+\sum_{i=1}^{d}(y_i-\widetilde{y}_i)^2.
+$$
+
+而
+
+$$
+y_i=\frac{z_i}{\sqrt d},
+
+\widetilde{y}_i=\frac{\operatorname{quant}(z_i)}{\sqrt d}.
+$$
+
+所以
+
+$$
+(y_i-\widetilde{y}_i)^2
+
+\left(
+\frac{z_i-\operatorname{quant}(z_i)}{\sqrt d}
+\right)^2
+
+\frac{1}{d}(z_i-\operatorname{quant}(z_i))^2.
+$$
+
+于是
+
+$$
+|x-\widetilde{x}|_2^2
+
+\frac{1}{d}
+\sum_{i=1}^{d}
+(z_i-\operatorname{quant}(z_i))^2.
+$$
+
+现在取期望：
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|_2^2
+
+\frac{1}{d}
+\sum_{i=1}^{d}
+\mathbb{E}_{D,U}
+(z_i-\operatorname{quant}(z_i))^2.
+$$
+
+所以高维向量误差已经被化成了每个标量 $z_i$ 的量化误差。
+
+证明的第二层：每个 $z_i$ 都是 Rademacher 随机和
+
+现在看
+
+$$
+z_i=\sqrt d(HDx)_i.
+$$
+
+因为
+
+$$
+D=\operatorname{diag}(\varepsilon_1,\dots,\varepsilon_d),
+$$
+
+其中每个 $\varepsilon_j$ 独立取 $\pm1$，所以
+
+$$
+(HDx)_i
+
+\sum_{j=1}^{d}H_{ij}\varepsilon_j x_j.
+$$
+
+乘上 $\sqrt d$，得到
+
+$$
+z_i
+
+\sum_{j=1}^{d}\sqrt d,H_{ij}x_j\varepsilon_j.
+$$
+
+令
+
+$$
+a_j^{(i)}=\sqrt d,H_{ij}x_j.
+$$
+
+那么
+
+$$
+z_i=\sum_{j=1}^{d}a_j^{(i)}\varepsilon_j.
+$$
+
+接下来检查系数的平方和。归一化 Hadamard 矩阵的每个元素都满足
+
+$$
+H_{ij}^2=\frac{1}{d}.
+$$
+
+因此
+
+$$
+\sum_{j=1}^{d}(a_j^{(i)})^2
+
+# \sum_{j=1}^{d}dH_{ij}^2x_j^2
+
+# \sum_{j=1}^{d}x_j^2
+
+1.
+$$
+
+所以每个 $z_i$ 都具有同样的形式：
+
+$$
+z_i=\sum_j a_j\varepsilon_j,
+\qquad
+\sum_j a_j^2=1.
+$$
+
+这种随机变量叫标准化 Rademacher 随机和。
+
+到这里，Theorem 2.2 已经被化成了一个纯标量命题：
+
+若
+
+$$
+X=\sum_j a_j\varepsilon_j,
+\qquad
+\sum_j a_j^2=1,
+$$
+
+那么要证明
+
+$$
+\mathbb{E}_{\varepsilon,U}
+(X-\operatorname{quant}(X))^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+只要这个标量结论成立，代回刚才的平均式，就得到
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|*2^2
+\leq
+\frac{1}{d}\sum*{i=1}^d
+\frac{\pi\sqrt3/2+o(1)}{B^2}
+
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+所以现在真正要证明的是标量估计。
+
+标量估计的证明思路
+
+我们现在要处理
+
+$$
+X=\sum_j a_j\varepsilon_j,
+\qquad
+\sum_j a_j^2=1.
+$$
+
+这个 $X$ 不一定是高斯。比如如果 $a_1=1$，其他全是 $0$，那么
+
+$$
+X=\varepsilon_1,
+$$
+
+只会取 $+1$ 和 $-1$。它是离散的。
+
+但是 $X$ 有一个很好的性质：它是 $1$-subgaussian。意思是它的尾部不会比标准高斯更重。我们证明一下。
+
+对任意 $\lambda\in\mathbb{R}$，
+
+$$
+\mathbb{E}e^{\lambda X}
+
+\mathbb{E}e^{\lambda\sum_j a_j\varepsilon_j}.
+$$
+
+由于 $\varepsilon_j$ 独立，
+
+$$
+\mathbb{E}e^{\lambda X}
+
+\prod_j
+\mathbb{E}e^{\lambda a_j\varepsilon_j}.
+$$
+
+而
+
+$$
+\mathbb{E}e^{\lambda a_j\varepsilon_j}
+
+\frac12e^{\lambda a_j}
++
+\frac12e^{-\lambda a_j}
+
+\cosh(\lambda a_j).
+$$
+
+利用基本不等式
+
+$$
+\cosh u\leq e^{u^2/2},
+$$
+
+得到
+
+$$
+\mathbb{E}e^{\lambda a_j\varepsilon_j}
+\leq
+e^{\lambda^2a_j^2/2}.
+$$
+
+所以
+
+$$
+\mathbb{E}e^{\lambda X}
+\leq
+\prod_j e^{\lambda^2a_j^2/2}
+
+# e^{\lambda^2\sum_j a_j^2/2}
+
+e^{\lambda^2/2}.
+$$
+
+这就说明 $X$ 的矩母函数被标准高斯控制，因此 $X$ 是 $1$-subgaussian。
+
+这件事会带来两个后果。第一，$X$ 的尾部很小：
+
+$$
+\mathbb{P}(|X|>s)\leq 2e^{-s^2/2}.
+$$
+
+第二，我们后面会用到
+
+$$
+\mathbb{E}e^{X^2/3}\leq \sqrt3.
+$$
+
+这个式子可以理解成：虽然 $X$ 不是高斯，但它的某些指数型二阶矩不会超过标准高斯对应量。
+
+现在把误差分成中心和尾部
+
+作者选择一个阈值
+
+$$
+M=\sqrt{5\log B}.
+$$
+
+然后把情况分成两部分。
+
+中心区域是
+
+$$
+|X|\leq M.
+$$
+
+尾部区域是
+
+$$
+|X|>M.
+$$
+
+证明策略是：中心区域做精细估计，得到主常数 $\pi\sqrt3/2$；尾部区域只做粗糙估计，但因为尾部概率极小，所以它最终贡献 $o(B^{-2})$，不会影响主常数。
+
+先看中心区域。
+
+在中心区域里，$X$ 不太大。此时量化桶比较窄，我们可以用一阶近似分析 $F^{-1}$。
+
+回忆 Algorithm 1：量化不是直接在 $t$-轴上切桶，而是在
+
+$$
+F(t)
+$$
+
+所在的 $[0,1]$ 空间里切桶。桶宽大约是
+
+$$
+\frac{1}{B}.
+$$
+
+因为加入了随机偏移 $U$，对固定的 $t$ 来说，$F(t)$ 在它所在桶里的相对位置可以看成均匀随机。于是桶中点可以写成
+
+$$
+F(t)+\frac{T}{B},
+$$
+
+其中
+
+$$
+T\sim \operatorname{Unif}\left[-\frac12,\frac12\right].
+$$
+
+因此
+
+$$
+\operatorname{quant}(t)
+
+F^{-1}\left(F(t)+\frac{T}{B}\right).
+$$
+
+现在使用一阶 Taylor 近似。对一个可导函数 $F^{-1}$，在点 $F(t)$ 附近，
+
+$$
+F^{-1}(F(t)+\delta)
+\approx
+F^{-1}(F(t))
++
+\delta,(F^{-1})'(F(t)).
+$$
+
+而
+
+$$
+F^{-1}(F(t))=t.
+$$
+
+又根据反函数求导公式，
+
+$$
+(F^{-1})'(F(t))=\frac{1}{F'(t)}.
+$$
+
+令
+
+$$
+\delta=\frac{T}{B},
+$$
+
+就得到
+
+$$
+\operatorname{quant}(t)-t
+\approx
+\frac{T/B}{F'(t)}.
+$$
+
+平方以后，
+
+$$
+(\operatorname{quant}(t)-t)^2
+\approx
+\frac{T^2}{B^2F'(t)^2}.
+$$
+
+对 dithering 的随机性取期望，也就是对 $T$ 取期望。因为
+
+$$
+T\sim \operatorname{Unif}\left[-\frac12,\frac12\right],
+$$
+
+所以
+
+$$
+\mathbb{E}T^2=\frac{1}{12}.
+$$
+
+因此中心区域里有近似
+
+$$
+\mathbb{E}_U(\operatorname{quant}(t)-t)^2
+\approx
+\frac{1}{12B^2}\frac{1}{F'(t)^2}.
+$$
+
+这一步就是 dithering 的数学作用：它把固定输入 $t$ 在桶里的相对位置变成均匀随机变量，于是误差平方平均给出 $1/12$。
+
+现在我们要对随机的 $X$ 取期望。中心区域贡献大约是
+
+$$
+\frac{1}{12B^2}
+\mathbb{E}
+\frac{1}{F'(X)^2}.
+$$
+
+接下来计算这个量。
+
+论文定义
+
+$$
+F(t)=\frac{1}{A}\int_{-\infty}^t\phi(s)^{1/3},ds.
+$$
+
+因此
+
+$$
+F'(t)=\frac{1}{A}\phi(t)^{1/3}.
+$$
+
+而标准高斯密度是
+
+$$
+\phi(t)=(2\pi)^{-1/2}e^{-t^2/2}.
+$$
+
+所以
+
+$$
+\phi(t)^{1/3}
+
+(2\pi)^{-1/6}e^{-t^2/6}.
+$$
+
+于是
+
+$$
+F'(t)=\frac{(2\pi)^{-1/6}}{A}e^{-t^2/6}.
+$$
+
+所以
+
+$$
+\frac{1}{F'(t)^2}
+
+A^2(2\pi)^{1/3}e^{t^2/3}.
+$$
+
+代入 $X$，得到
+
+$$
+\mathbb{E}\frac{1}{F'(X)^2}
+
+A^2(2\pi)^{1/3}
+\mathbb{E}e^{X^2/3}.
+$$
+
+刚才说过，由于 $X$ 是 $1$-subgaussian，
+
+$$
+\mathbb{E}e^{X^2/3}\leq \sqrt3.
+$$
+
+因此中心区域的主贡献不超过
+
+$$
+\frac{1}{12B^2}
+A^2(2\pi)^{1/3}\sqrt3.
+$$
+
+现在只剩下计算 $A$。
+
+由定义，
+
+$$
+A=\int_{\mathbb{R}}\phi(t)^{1/3},dt.
+$$
+
+我们刚才知道
+
+$$
+\phi(t)^{1/3}
+
+(2\pi)^{-1/6}e^{-t^2/6}.
+$$
+
+所以
+
+$$
+A
+
+(2\pi)^{-1/6}
+\int_{-\infty}^{\infty}e^{-t^2/6},dt.
+$$
+
+而
+
+$$
+\int_{-\infty}^{\infty}e^{-t^2/6},dt
+
+\sqrt{6\pi}.
+$$
+
+因此
+
+$$
+A=(2\pi)^{-1/6}\sqrt{6\pi}.
+$$
+
+把它整理一下：
+
+$$
+\sqrt{6\pi}
+
+\sqrt3\sqrt{2\pi},
+$$
+
+所以
+
+$$
+A
+
+# \sqrt3(2\pi)^{1/2-1/6}
+
+\sqrt3(2\pi)^{1/3}.
+$$
+
+于是
+
+$$
+A^2
+
+3(2\pi)^{2/3}.
+$$
+
+代回中心主项：
+
+$$
+\frac{1}{12B^2}
+A^2(2\pi)^{1/3}\sqrt3
+
+\frac{1}{12B^2}
+\cdot
+3(2\pi)^{2/3}
+\cdot
+(2\pi)^{1/3}
+\cdot
+\sqrt3.
+$$
+
+合并指数：
+
+$$
+(2\pi)^{2/3}(2\pi)^{1/3}=2\pi.
+$$
+
+所以
+
+$$
+\frac{1}{12B^2}
+\cdot
+3
+\cdot
+2\pi
+\cdot
+\sqrt3
+
+# \frac{6\pi\sqrt3}{12B^2}
+
+\frac{\pi\sqrt3}{2B^2}.
+$$
+
+这就是主常数
+
+$$
+\frac{\pi\sqrt3}{2}
+$$
+
+的来源。
+
+到这里，我们已经证明了中心区域的贡献大约不超过
+
+$$
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+这里的 $o(1)$ 来自 Taylor 近似误差。论文要做一些技术工作来保证这个误差对所有 $t\in[-M,M]$、所有维度 $d$、所有单位系数向量 $a$ 都一致消失。直觉上，这是因为当 $B\to\infty$ 时，桶宽 $1/B$ 越来越小，$F^{-1}$ 在一个桶内越来越接近线性函数。
+
+现在看尾部区域。
+
+尾部区域是
+
+$$
+|X|>M,
+\qquad
+M=\sqrt{5\log B}.
+$$
+
+这里作者不再用精细 Taylor 估计，而是用粗糙不等式：
+
+$$
+|X-\operatorname{quant}(X)|^2
+\leq
+2X^2+2|\operatorname{quant}(X)|^2.
+$$
+
+这个不等式来自
+
+$$
+(a-b)^2\leq 2a^2+2b^2.
+$$
+
+尾部里 $X^2$ 的期望很小，因为 $X$ 是 subgaussian：
+
+$$
+\mathbb{P}(|X|>M)\leq 2e^{-M^2/2}.
+$$
+
+而
+
+$$
+M^2=5\log B,
+$$
+
+所以
+
+$$
+e^{-M^2/2}
+
+# e^{-(5/2)\log B}
+
+B^{-5/2}.
+$$
+
+这比
+
+$$
+B^{-2}
+$$
+
+还小一个因子
+
+$$
+B^{-1/2}.
+$$
+
+至于
+
+$$
+|\operatorname{quant}(X)|^2
+$$
+
+也不会太夸张。因为一共有 $B$ 个桶，最极端的重构值大约对应高斯分位数 $1/B$ 附近，而高斯 $1/B$ 分位数的大小大约是
+
+$$
+\sqrt{\log B}.
+$$
+
+所以平方大约是
+
+$$
+\log B.
+$$
+
+因此尾部贡献大致被控制为
+
+$$
+C(\log B)B^{-5/2},
+$$
+
+这显然是
+
+$$
+o(B^{-2}).
+$$
+
+因为
+
+$$
+\frac{(\log B)B^{-5/2}}{B^{-2}}
+
+\frac{\log B}{\sqrt B}
+\to 0.
+$$
+
+所以尾部不会影响主项。
+
+把中心和尾部合并
+
+中心区域贡献是
+
+$$
+\leq
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+尾部区域贡献是
+
+$$
+o(B^{-2}).
+$$
+
+所以整体标量误差满足
+
+$$
+\mathbb{E}_{\varepsilon,U}
+(X-\operatorname{quant}(X))^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+这就是标量引理。
+
+最后回到向量
+
+对每个坐标 $i$，我们已经知道
+
+$$
+z_i=\sqrt d(HDx)_i
+$$
+
+都是某个标准化 Rademacher 随机和，所以每个坐标都满足
+
+$$
+\mathbb{E}_{D,U}
+(z_i-\operatorname{quant}(z_i))^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+于是
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|_2^2
+
+\frac{1}{d}
+\sum_{i=1}^{d}
+\mathbb{E}*{D,U}
+(z_i-\operatorname{quant}(z_i))^2
+\leq
+\frac{1}{d}
+\sum*{i=1}^{d}
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+得到
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|_2^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+因为
+
+$$
+B=2^b,
+$$
+
+所以
+
+$$
+B^{-2}=4^{-b}.
+$$
+
+最终得到
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|_2^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{4^b}.
+$$
+
+这就是 Algorithm 1 的均方误差证明主线，也就是 Theorem 2.2 的证明思想。
+
+你可以把整个证明记成一句话：
+
+正交性把向量误差变成坐标误差；Hadamard 随机符号结构把每个坐标变成 subgaussian 的 Rademacher 和；dithering 让中心区域的量化误差像均匀噪声；subgaussian 尾界让尾部贡献可以忽略；最后 $F'(t)$ 的具体形式给出常数 $\pi\sqrt3/2$。

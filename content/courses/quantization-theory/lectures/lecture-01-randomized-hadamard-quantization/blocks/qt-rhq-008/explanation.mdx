@@ -1,0 +1,435 @@
+好，我们接着讲。刚才我们证明的是 Algorithm 1 的均方误差界。现在要补上论文主定理 Theorem 1.1 里另一个性质：无偏性。
+
+Algorithm 1 已经很好了，但它有一个小缺陷：它不严格无偏。也就是说，虽然它的误差很小，但一般并不满足
+
+$$
+\mathbb{E}_{D,U}[\widetilde{x}]=x.
+$$
+
+论文因此在附录 A.3 构造了 Algorithm 5。Algorithm 5 的目的很明确：在不破坏刚才那个均方误差常数的前提下，把重构向量变成严格无偏。论文自己也说，Algorithm 1 先用来展示主要 MSE 论证，而 Algorithm 5 是它的无偏变体。
+
+我们先理解 Algorithm 1 为什么会有偏。
+
+在 Algorithm 1 里，对一个标量 $t$，算法先看
+
+$$
+r=F(t).
+$$
+
+然后随机平移网格，找到 $r$ 落在哪个桶里，再取这个桶在 $F$-空间中的中点，最后用
+
+$$
+F^{-1}
+$$
+
+映射回实数轴。也就是说，重构值大致像
+
+$$
+\operatorname{quant}(t)
+
+F^{-1}\left(F(t)+\frac{V}{B}\right),
+$$
+
+其中
+
+$$
+V\sim \operatorname{Unif}\left[-\frac12,\frac12\right].
+$$
+
+如果 $F^{-1}$ 是线性函数，那么
+
+$$
+\mathbb{E}_V F^{-1}\left(F(t)+\frac{V}{B}\right)
+
+# F^{-1}(F(t))
+
+t.
+$$
+
+那就无偏了。
+
+但问题是，$F^{-1}$ 不是线性的。一般来说，对于非线性函数 $g$，即使 $\mathbb{E}V=0$，也不一定有
+
+$$
+\mathbb{E}g(r+V)=g(r).
+$$
+
+这就是 Algorithm 1 偏差的来源。它取的是“桶中点经过 $F^{-1}$ 的值”，但随机桶中点经过非线性函数以后，平均值不一定回到原来的 $t$。
+
+用 Taylor 展开可以看得更清楚。设
+
+$$
+g=F^{-1}.
+$$
+
+那么
+
+$$
+g(r+\Delta)
+\approx
+g(r)+g'(r)\Delta+\frac12g''(r)\Delta^2.
+$$
+
+如果 $\Delta$ 是对称随机变量，那么
+
+$$
+\mathbb{E}\Delta=0,
+$$
+
+所以一阶项消失。但二阶项一般不消失：
+
+$$
+\mathbb{E}g(r+\Delta)
+\approx
+g(r)+\frac12g''(r)\mathbb{E}\Delta^2.
+$$
+
+所以 Algorithm 1 的偏差通常是很小的，大约是二阶小量，但不是严格等于零。
+
+这就是为什么论文要改重构函数。它不是改 Hadamard，也不是改 $D$，而是改标量量化器的“桶代表值”。
+
+Algorithm 5 的第一个变化，是网格方式稍微改了。
+
+Algorithm 1 使用 $B$ 个桶，间距大致是
+
+$$
+\frac1B.
+$$
+
+Algorithm 5 改成使用间距
+
+$$
+\delta=\frac{1}{B-1}.
+$$
+
+并且不再像 Algorithm 1 那样把最左端和最右端强行钉在 $0$ 和 $1$。它直接在 $F$-坐标上使用平移网格。对一个
+
+$$
+r=F(t)\in(0,1),
+$$
+
+它定义桶编号为
+
+$$
+j=\lfloor (B-1)r-U\rfloor+1.
+$$
+
+因为 $U\sim \operatorname{Unif}[0,1$)，所以对于固定的 $r$，它所在桶的中点可以写成
+
+$$
+m(r)=r+\frac{V}{B-1},
+$$
+
+其中
+
+$$
+V\sim \operatorname{Unif}\left[-\frac12,\frac12\right].
+$$
+
+这一点很重要：Algorithm 5 让每个 $r$ 在桶里的相对位置严格均匀，而不是像 Algorithm 1 那样还要额外处理端点桶。论文在 Algorithm 5 后面正是这样解释的：对固定 $r\in(0,1)$， shifted cell 的中点可以写成 $r+V/(B-1)$。
+
+Algorithm 5 的第二个变化，是不用
+
+$$
+F^{-1}
+$$
+
+直接做重构，而是构造一个新的函数
+
+$$
+G.
+$$
+
+Algorithm 1 的重构值是
+
+$$
+q_j=F^{-1}(\text{桶中点}).
+$$
+
+Algorithm 5 的重构值改成
+
+$$
+q_j=G(\text{桶中点}).
+$$
+
+这个 $G$ 不是随便选的。它要满足一个非常关键的平均条件：
+
+$$
+(B-1)
+\int_{r-\frac{1}{2(B-1)}}^{r+\frac{1}{2(B-1)}}
+G(s),ds
+
+F^{-1}(r).
+$$
+
+因为
+
+$$
+\delta=\frac{1}{B-1},
+$$
+
+所以这个式子也可以写成
+
+$$
+\frac{1}{\delta}
+\int_{r-\delta/2}^{r+\delta/2}
+G(s),ds
+
+F^{-1}(r).
+$$
+
+这句话的意思是：在以 $r$ 为中心、宽度为 $\delta$ 的小区间上，$G$ 的平均值恰好等于 $F^{-1}(r)$。
+
+现在你看它为什么能保证无偏。对固定输入 $t$，令
+
+$$
+r=F(t).
+$$
+
+Algorithm 5 的随机重构值是
+
+$$
+\operatorname{quant}(t)
+
+G\left(F(t)+V\delta\right),
+$$
+
+其中
+
+$$
+V\sim \operatorname{Unif}\left[-\frac12,\frac12\right].
+$$
+
+因此对 $U$ 取期望，本质上就是在区间
+
+$$
+[F(t)-\delta/2,\ F(t)+\delta/2]
+$$
+
+上对 $G$ 求平均：
+
+$$
+\mathbb{E}_U[\operatorname{quant}(t)]
+
+\frac{1}{\delta}
+\int_{F(t)-\delta/2}^{F(t)+\delta/2}
+G(s),ds.
+$$
+
+根据 $G$ 的构造条件，这正好等于
+
+$$
+F^{-1}(F(t))=t.
+$$
+
+所以
+
+$$
+\mathbb{E}_U[\operatorname{quant}(t)]=t.
+$$
+
+这就是标量层面的无偏性。
+
+这一点是 Algorithm 5 的核心。它不是希望“桶中点代回 $F^{-1}$ 后平均接近原值”，而是主动构造一个 $G$，让平均值严格等于原值。论文的 Lemma A.9 正是先证明：对每个实数 $t$，Algorithm 5 都满足
+
+$$
+\mathbb{E}_U[\operatorname{quant}(t)]=t.
+$$
+
+然后再证明它仍然保留同样的均方误差界。
+
+你可能会问：这样构造出来的 $G$ 会不会很奇怪？会不会为了无偏而牺牲误差？
+
+论文的关键技术点就是证明不会。它在 Lemma A.8 中说明，可以显式构造这样一个 $G$，并且在中心区域里它仍然非常接近 $F^{-1}$。具体来说，当
+
+$$
+|t|\leq \sqrt{5\log B}
+$$
+
+且
+
+$$
+|v|\leq \frac12
+$$
+
+时，有
+
+$$
+G\left(F(t)+\frac{v}{B-1}\right)
+
+t+
+\frac{v}{(B-1)F'(t)}
++
+o(1)\frac{1}{(B-1)F'(t)}.
+$$
+
+这个式子和我们之前对 Algorithm 1 的一阶近似几乎一样。Algorithm 1 中我们有
+
+$$
+F^{-1}\left(F(t)+\frac{v}{B}\right)
+\approx
+t+\frac{v}{BF'(t)}.
+$$
+
+Algorithm 5 只是把 $B$ 换成 $B-1$，并把 $F^{-1}$ 换成 $G$，但中心区域里的一阶误差结构仍然相同。
+
+于是均方误差证明几乎可以照搬刚才的证明。
+
+对中心区域，
+
+$$
+\operatorname{quant}(t)-t
+\approx
+\frac{V}{(B-1)F'(t)}.
+$$
+
+平方并取期望，由于
+
+$$
+\mathbb{E}V^2=\frac{1}{12},
+$$
+
+得到
+
+$$
+\mathbb{E}_U(t-\operatorname{quant}(t))^2
+\approx
+\frac{1}{12(B-1)^2F'(t)^2}.
+$$
+
+再对
+
+$$
+X=\sum_i a_i\varepsilon_i
+$$
+
+取期望，使用同样的 subgaussian 指数矩控制，就仍然得到
+
+$$
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+注意这里虽然是 $(B-1)^{-2}$，但当 $B\to\infty$ 时，
+
+$$
+(B-1)^{-2}
+
+B^{-2}(1+o(1)).
+$$
+
+所以主常数不变。
+
+对尾部区域，论文也做了和之前类似的粗糙控制。因为 $G$ 的构造虽然比 $F^{-1}$ 复杂，但它不会在尾部长得离谱。论文给出类似估计，说明尾部贡献仍然是
+
+$$
+o(B^{-2}).
+$$
+
+因此 Algorithm 5 的标量误差同样满足
+
+$$
+\mathbb{E}_{\varepsilon,U}
+(X-\operatorname{quant}(X))^2
+\leq
+\left(\frac{\pi\sqrt3}{2}+o(1)\right)B^{-2}.
+$$
+
+这就是 Lemma A.9 的第二部分。
+
+最后从标量无偏推到向量无偏。
+
+固定随机符号矩阵 $D$ 后，
+
+$$
+y=HDx
+$$
+
+就确定了，所以每个
+
+$$
+z_i=\sqrt d,y_i
+$$
+
+也是确定的。Algorithm 5 的标量无偏性告诉我们：
+
+$$
+\mathbb{E}_U[\operatorname{quant}(z_i)\mid D]=z_i.
+$$
+
+因此
+
+$$
+\mathbb{E}_U[\widetilde{y}_i\mid D]
+
+# \mathbb{E}_U\left[\frac{1}{\sqrt d}\operatorname{quant}(z_i)\mid D\right]
+
+# \frac{1}{\sqrt d}z_i
+
+y_i.
+$$
+
+所以
+
+$$
+\mathbb{E}_U[\widetilde{y}\mid D]=y=HDx.
+$$
+
+解码时
+
+$$
+\widetilde{x}=DH^\top\widetilde{y}.
+$$
+
+于是
+
+$$
+\mathbb{E}_U[\widetilde{x}\mid D]
+
+# DH^\top \mathbb{E}_U[\widetilde{y}\mid D]
+
+DH^\top HDx.
+$$
+
+因为
+
+$$
+D^2=I,\qquad H^\top H=I,
+$$
+
+所以
+
+$$
+DH^\top HDx=x.
+$$
+
+因此
+
+$$
+\mathbb{E}_U[\widetilde{x}\mid D]=x.
+$$
+
+再对 $D$ 取期望，就得到
+
+$$
+\mathbb{E}_{D,U}[\widetilde{x}]=x.
+$$
+
+这就是 Theorem 1.1 的无偏性部分。论文最后也是这样证明的：先条件在 $D$ 上，此时 $z_i$ 是确定的；由 Lemma A.9 得到每个标量重构无偏；再通过线性反变换 $DH^\top$ 回到原空间，得到向量无偏。
+
+所以到这里，论文的第一个主定理 Theorem 1.1 就完整了。它由两部分组成：
+
+Algorithm 5 的均方误差和 Algorithm 1 一样好，
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|_2^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{4^b}.
+$$
+
+同时它严格无偏，
+
+$$
+\mathbb{E}_{D,U}[\widetilde{x}]=x.
+$$
+
+直观总结一下：Algorithm 1 是“好量化器，但中点重构经过非线性 $F^{-1}$ 后有一点偏”；Algorithm 5 是“把 $F^{-1}$ 替换成特殊设计的 $G$，让随机桶内平均正好回到原值”。而因为 $G$ 在局部仍然像 $F^{-1}$，所以误差常数没有变坏。

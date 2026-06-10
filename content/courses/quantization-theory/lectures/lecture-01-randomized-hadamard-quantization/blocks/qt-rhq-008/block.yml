@@ -1,0 +1,18 @@
+id: qt-rhq-008
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: 完整证明与 Algorithm 5 无偏修正
+title_en: Complete Proof and Algorithm 5 Unbiased Fix
+pages: "13-18"
+topics:
+  - Appendix A 逐条 Lemma
+  - Lemma A.2 Rademacher subgaussian
+  - Lemma A.3 中心区域近似
+  - Claim A.4 F(t) = Φ(t/√3)
+  - Corollary A.5 边界距离
+  - Lemma A.6 尾部粗略控制
+  - Algorithm 5 无偏设计
+  - G 函数替换中点重构
+  - 无偏性证明
+status: completed
+created: 2026-06-10

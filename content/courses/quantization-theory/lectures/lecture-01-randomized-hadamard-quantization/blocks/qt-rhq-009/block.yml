@@ -1,0 +1,17 @@
+id: qt-rhq-009
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: 内积量化器 Section 4
+title_en: Inner Product Quantization Section 4
+pages: "8-9"
+topics:
+  - 内积估计问题
+  - 向量MSE与内积误差的关系
+  - 残差量化
+  - Algorithm 2 残差尺度量化
+  - Algorithm 3 残差坐标量化
+  - Algorithm 4 两阶段内积量化器
+  - Theorem 1.2 内积误差界
+  - 应用场景与局限
+status: completed
+created: 2026-06-10

@@ -1,0 +1,16 @@
+id: qt-rhq-005
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: 随机旋转与 Dithering 深入
+title_en: Random Rotation and Dithering Deep Dive
+pages: "2-3"
+topics:
+  - Haar 随机正交矩阵
+  - 真正随机旋转的性质
+  - HD 与连续随机的区别
+  - Rademacher 随机和
+  - dithering 消除网格对齐
+  - F^{-1} 的实际计算
+  - F(t) = Φ(t/√3)
+status: completed
+created: 2026-06-10

@@ -1,0 +1,365 @@
+这一节非常关键。只要这一步理解了，后面的证明就不会显得像突然冒出来的公式。
+
+论文现在要证明的是 Algorithm 1 的误差界。Algorithm 1 还不是无偏版本，但它已经能证明均方误差满足
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|_2^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{4^b}.
+$$
+
+这就是 Theorem 2.2 的内容。论文后面再把它改造成无偏版本 Algorithm 5，从而得到 Theorem 1.1。
+
+先不要急着问常数 $\pi\sqrt3/2$ 怎么来。现在我们只问一个更基础的问题：为什么可以把整个向量误差拆成每个坐标的标量误差？
+
+Algorithm 1 里，原向量先变成
+
+$$
+y=HDx.
+$$
+
+量化器实际上逐坐标处理的是
+
+$$
+z_i=\sqrt d,y_i.
+$$
+
+然后它把 $z_i$ 量化成
+
+$$
+\operatorname{quant}(z_i).
+$$
+
+解码时，因为当初乘过 $\sqrt d$，所以要除回来：
+
+$$
+\widetilde{y}_i=\frac{1}{\sqrt d}\operatorname{quant}(z_i).
+$$
+
+最后再从 Hadamard 域转回原空间：
+
+$$
+\widetilde{x}=DH^\top\widetilde{y}.
+$$
+
+现在我们要比较
+
+$$
+x
+$$
+
+和
+
+$$
+\widetilde{x}.
+$$
+
+直接在原空间比较它们似乎很麻烦。但注意 $HD$ 是正交矩阵。正交矩阵不改变长度，所以也不改变两个向量之间的距离。也就是说，
+
+$$
+|x-\widetilde{x}|_2
+
+|HDx-HD\widetilde{x}|_2.
+$$
+
+而
+
+$$
+HDx=y.
+$$
+
+另一方面，
+
+$$
+\widetilde{x}=DH^\top\widetilde{y}.
+$$
+
+所以
+
+$$
+HD\widetilde{x}
+
+HD(DH^\top\widetilde{y}).
+$$
+
+因为 $D^2=I$，并且 $HH^\top=I$，所以
+
+$$
+HD(DH^\top\widetilde{y})=\widetilde{y}.
+$$
+
+于是误差变成
+
+$$
+|x-\widetilde{x}|_2^2
+
+|y-\widetilde{y}|_2^2.
+$$
+
+这一步的意思非常朴素：既然 $HD$ 只是一个不改变距离的坐标变换，那么在原空间里比较 $x$ 和 $\widetilde{x}$，等价于在变换后的空间里比较 $y$ 和 $\widetilde{y}$。
+
+而 $y$ 和 $\widetilde{y}$ 是逐坐标定义的，所以
+
+$$
+|y-\widetilde{y}|_2^2
+
+\sum_{i=1}^{d}(y_i-\widetilde{y}_i)^2.
+$$
+
+把
+
+$$
+y_i=\frac{z_i}{\sqrt d}
+$$
+
+和
+
+$$
+\widetilde{y}_i=\frac{1}{\sqrt d}\operatorname{quant}(z_i)
+$$
+
+代进去，就得到
+
+$$
+(y_i-\widetilde{y}_i)^2
+
+\left(
+\frac{z_i}{\sqrt d}
+
+\frac{\operatorname{quant}(z_i)}{\sqrt d}
+\right)^2.
+$$
+
+也就是
+
+$$
+(y_i-\widetilde{y}_i)^2
+
+\frac{1}{d}
+(z_i-\operatorname{quant}(z_i))^2.
+$$
+
+所以整个向量误差就是
+
+$$
+|x-\widetilde{x}|_2^2
+
+\frac{1}{d}
+\sum_{i=1}^{d}
+(z_i-\operatorname{quant}(z_i))^2.
+$$
+
+这就是论文证明草图里最重要的第一步。它告诉我们：要控制高维误差，只需要控制每个标量 $z_i$ 被量化时的误差。
+
+这一步也解释了为什么算法要先乘 $\sqrt d$，后面再除 $\sqrt d$。乘上 $\sqrt d$ 以后，标量量化器看到的是 $z_i$，而不是很小的 $y_i$。但最终误差回到向量尺度时，每个坐标的平方误差都会自动带上一个
+
+$$
+\frac{1}{d}.
+$$
+
+所以如果每个 $z_i$ 的标量量化误差大约是
+
+$$
+\frac{1}{B^2},
+$$
+
+那么整个向量误差就是
+
+$$
+\frac{1}{d}\cdot d\cdot \frac{1}{B^2}
+
+\frac{1}{B^2}.
+$$
+
+因为
+
+$$
+B=2^b,
+$$
+
+所以
+
+$$
+\frac{1}{B^2}=4^{-b}.
+$$
+
+这就是主定理里 $4^{-b}$ 的结构来源。
+
+接下来要理解第二个关键点：每个 $z_i$ 到底是什么分布？
+
+我们知道
+
+$$
+z_i=\sqrt d(HDx)_i.
+$$
+
+把 $D$ 展开。因为
+
+$$
+D=\operatorname{diag}(\varepsilon_1,\dots,\varepsilon_d),
+$$
+
+所以 $Dx$ 的第 $j$ 个坐标是
+
+$$
+\varepsilon_j x_j.
+$$
+
+再乘 Hadamard 矩阵 $H$，第 $i$ 个坐标是
+
+$$
+(HDx)_i
+
+\sum_{j=1}^{d}H_{ij}\varepsilon_j x_j.
+$$
+
+所以
+
+$$
+z_i
+
+\sqrt d
+\sum_{j=1}^{d}H_{ij}\varepsilon_j x_j.
+$$
+
+把系数记成
+
+$$
+a_j^{(i)}=\sqrt d,H_{ij}x_j.
+$$
+
+于是
+
+$$
+z_i
+
+\sum_{j=1}^{d}a_j^{(i)}\varepsilon_j.
+$$
+
+这就是一个 Rademacher 随机和。所谓 Rademacher 随机变量，就是独立取 $+1$ 或 $-1$ 的随机符号。
+
+现在还要看这些系数 $a_j^{(i)}$ 有多大。Hadamard 矩阵是归一化的，所以每个元素满足
+
+$$
+H_{ij}^2=\frac{1}{d}.
+$$
+
+因此
+
+$$
+\sum_{j=1}^{d}\left(a_j^{(i)}\right)^2
+
+# \sum_{j=1}^{d}dH_{ij}^2x_j^2
+
+# \sum_{j=1}^{d}x_j^2
+
+1.
+$$
+
+这说明对于每个坐标 $i$，$z_i$ 都可以写成
+
+$$
+z_i=\sum_j a_j\varepsilon_j,
+$$
+
+其中
+
+$$
+\sum_j a_j^2=1.
+$$
+
+这非常重要。它说明虽然 $z_i$ 不一定是高斯分布，但它始终是一种标准化的随机符号和。论文后面的 Lemma A.7 正是正式证明了这一点：对每个 $i$，都存在一个单位系数向量 $a^{(i)}$，使得 $z_i$ 等于对应的 Rademacher sum。
+
+于是问题进一步简化了。
+
+原来的问题是：对任意单位向量 $x$，Algorithm 1 的高维量化误差是多少？
+
+现在变成：对任意满足
+
+$$
+\sum_j a_j^2=1
+$$
+
+的系数向量，令
+
+$$
+X=\sum_j a_j\varepsilon_j,
+$$
+
+那么标量量化误差
+
+$$
+\mathbb{E}_{\varepsilon,U}(X-\operatorname{quant}(X))^2
+$$
+
+能不能统一控制住？
+
+如果能证明
+
+$$
+\mathbb{E}_{\varepsilon,U}(X-\operatorname{quant}(X))^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{B^2},
+$$
+
+那么高维结论就自动成立。因为高维误差就是 $d$ 个这种标量误差的平均：
+
+$$
+\mathbb{E}_{D,U}|x-\widetilde{x}|_2^2
+
+\frac{1}{d}
+\sum_{i=1}^{d}
+\mathbb{E}_{D,U}(z_i-\operatorname{quant}(z_i))^2.
+$$
+
+每一项都被同一个上界控制，所以平均后还是同一个上界。
+
+这就是论文里的 Lemma 3.1，也就是 Appendix 里的 Lemma A.1。它是全文第一个真正困难的技术结论。论文说，对任意单位系数向量 $a$，令
+
+$$
+X_a=\sum_i a_i\varepsilon_i,
+$$
+
+那么
+
+$$
+\mathbb{E}_{\varepsilon,U}(X_a-\operatorname{quant}(X_a))^2
+\leq
+\frac{\pi\sqrt3/2+o(1)}{B^2}.
+$$
+
+一旦这个标量估计成立，Theorem 2.2 就几乎只是代入。
+
+所以现在我们可以把论文证明主线总结成一个很清晰的链条：
+
+Algorithm 1 的高维误差，由正交性转移到 Hadamard 域中；Hadamard 域中的误差逐坐标相加；每个坐标误差都等于某个标量 $z_i$ 的量化误差；而每个 $z_i$ 都是一个标准化 Rademacher 随机和；因此只要证明一个统一的标量量化误差估计，就能推出整个向量量化误差界。
+
+这一步是整篇论文最重要的结构化降维：不是把向量维度降了，而是把证明任务从“分析整个向量量化器”降成“分析一个标量随机变量的量化误差”。
+
+现在你可以先确认自己是否理解这三个等价转化：
+
+第一，正交变换不改变误差，所以
+
+$$
+|x-\widetilde{x}|_2^2
+
+|HDx-\widetilde{y}|_2^2.
+$$
+
+第二，因为逐坐标量化，所以向量误差变成
+
+$$
+\frac{1}{d}\sum_i(z_i-\operatorname{quant}(z_i))^2.
+$$
+
+第三，每个
+
+$$
+z_i=\sqrt d(HDx)_i
+$$
+
+都是某个标准化 Rademacher 随机和
+
+$$
+\sum_j a_j\varepsilon_j,\qquad \sum_j a_j^2=1.
+$$

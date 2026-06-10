@@ -1,0 +1,16 @@
+id: qt-rhq-006
+course: quantization-theory
+lecture: lecture-01-randomized-hadamard-quantization
+title: 高维到标量的误差归约
+title_en: High-Dimensional to Scalar Error Reduction
+pages: "5-6"
+topics:
+  - HD 正交性
+  - 向量误差分解为坐标误差
+  - Rademacher sum 结构
+  - subgaussian 性质
+  - Lemma A.2
+  - Lemma A.7 坐标结构
+  - 标量量化误差主导
+status: completed
+created: 2026-06-10

@@ -3,6 +3,14 @@
 import json
 import yaml
 from pathlib import Path
+from datetime import date
+
+
+class IndexEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, date):
+            return obj.isoformat()
+        return super().default(obj)
 
 
 def build_search_index(content_dir: str = "content") -> dict:
@@ -56,7 +64,7 @@ def save_index(index: dict, output_path: str = "data/indexes/blocks.json"):
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, 'w', encoding='utf-8') as f:
-        json.dump(index, f, ensure_ascii=False, indent=2)
+        json.dump(index, f, ensure_ascii=False, indent=2, cls=IndexEncoder)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,13 @@
+id: quantization-theory
+title: 量化理论
+title_en: Quantization Theory
+description: 精读量化领域核心论文，从向量量化、随机Hadamard变换到内积估计的理论保证
+instructor: AI Study Vault
+semester: 2026 Summer
+language: zh
+lectures:
+  - id: lecture-01-randomized-hadamard-quantization
+    title: 可证明量化与随机Hadamard变换
+    title_en: "Provable Quantization with Randomized Hadamard"
+    pages: 25
+    date: "2026-06-10"
